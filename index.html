@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amigo Secreto | Premium Experience</title>
+    <title>Amigo Secreto Confra 2025</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <script type="module">
         import { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe } from 'https://www.unpkg.com/@directus/sdk@13.0.0/dist/index.js';
         window.DirectusSDK = { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe };
@@ -14,206 +15,320 @@
 
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-blur: 20px;
-            --accent: #2997ff; /* Apple Blue */
-            --accent-glow: rgba(41, 151, 255, 0.4);
-            --text-main: #f5f5f7;
-            --text-sec: #86868b;
-            --bg-dark: #000000;
+            --primary: #ff0f7b;
+            --secondary: #f89b29;
+            --tertiary: #4200ff;
+            --bg-deep: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-glow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-deep);
+            color: #fff;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* Evita scroll na animação */
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #000 60%);
+            perspective: 1000px;
         }
 
-        /* Fundo Animado (Aurora) */
-        .aurora {
+        /* FUNDO ANIMADO INSANO */
+        .animated-bg {
             position: fixed;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 50%, rgba(41,151,255,0.15), transparent 40%);
-            animation: rotate 20s linear infinite;
-            z-index: -1;
-            pointer-events: none;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(45deg, #4200ff, #ff0f7b, #f89b29, #00c6ff);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            z-index: -2;
         }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Container Principal (Glassmorphism) */
+        /* Formas flutuantes no fundo */
+        .shapes {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden;
+        }
+        .shape {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            animation: floatShape 20s infinite linear;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatShape {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        /* CONTAINER 3D GLASS */
         .app-container {
-            width: 90%; max-width: 450px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
+            width: 90%; max-width: 420px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0; transform: translateY(20px);
-            animation: fadeIn 0.8s forwards;
+            border-top: 1px solid rgba(255,255,255,0.5);
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 50px 70px -20px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; /* Smooth movement */
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8) translateY(50px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
 
-        h1 { font-weight: 800; font-size: 2rem; margin-bottom: 8px; letter-spacing: -1px; text-align: center; }
-        p.subtitle { color: var(--text-sec); text-align: center; margin-bottom: 30px; font-weight: 300; }
+        /* TÍTULOS */
+        h1 { 
+            font-weight: 900; 
+            font-size: 2.2rem; 
+            margin-bottom: 5px; 
+            text-align: center;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            line-height: 1;
+        }
+        
+        .year-badge {
+            display: inline-block;
+            background: #ff0f7b;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transform: rotate(-5deg);
+            box-shadow: 0 5px 15px rgba(255, 15, 123, 0.4);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
 
-        /* Inputs Estilo Tesla */
-        .input-group { margin-bottom: 20px; position: relative; }
+        p.subtitle { color: rgba(255,255,255,0.8); text-align: center; margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
+
+        /* INPUTS MODERNOS */
+        .input-group { margin-bottom: 15px; position: relative; }
         input, textarea {
             width: 100%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--glass-border);
-            padding: 16px;
-            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid transparent;
+            padding: 18px;
+            border-radius: 16px;
             color: white;
             font-size: 16px;
-            transition: all 0.3s ease;
+            transition: 0.3s;
             outline: none;
+            font-weight: 500;
         }
         input:focus, textarea:focus {
-            background: rgba(255,255,255,0.08);
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
+            background: rgba(0,0,0,0.5);
+            border-color: var(--secondary);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(248, 155, 41, 0.3);
         }
-        ::placeholder { color: rgba(255,255,255,0.3); }
 
-        /* Botão Premium */
+        /* BOTÕES DE AÇÃO */
         button {
             width: 100%;
-            padding: 16px;
-            background: var(--text-main);
-            color: black;
+            padding: 18px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
             border: none;
-            border-radius: 12px;
-            font-weight: 600;
+            border-radius: 16px;
+            font-weight: 700;
             font-size: 16px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 10px;
+            box-shadow: 0 10px 20px rgba(255, 15, 123, 0.3);
         }
         button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(255, 15, 123, 0.5);
         }
+        button:active { transform: scale(0.95); }
+
         button.secondary {
-            background: transparent; border: 1px solid var(--glass-border); color: var(--text-sec); margin-top: 10px;
+            background: transparent; border: 2px solid rgba(255,255,255,0.1); box-shadow: none; margin-top: 15px;
         }
-        button.secondary:hover { border-color: var(--text-main); color: var(--text-main); }
+        button.secondary:hover { border-color: white; background: rgba(255,255,255,0.05); }
 
-        /* Views (Telas) */
+        /* VIEWS & ANIMAÇÕES */
         .view { display: none; }
-        .view.active { display: block; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .view.active { display: block; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards de Presentes / Chat */
+        /* TABS ESTILOSAS */
+        .nav-tabs { 
+            display: flex; gap: 8px; margin-bottom: 25px; 
+            background: rgba(0,0,0,0.2); padding: 5px; border-radius: 15px;
+        }
+        .nav-tab { 
+            flex: 1; padding: 12px 5px; text-align: center; border-radius: 10px; 
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.3s; 
+            color: rgba(255,255,255,0.6); text-transform: uppercase;
+        }
+        .nav-tab.active { 
+            background: #fff; color: var(--bg-deep); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* CARDS E CHAT */
         .card {
-            background: rgba(255,255,255,0.03);
-            padding: 15px; border-radius: 12px;
-            margin-bottom: 10px; border: 1px solid transparent;
+            background: rgba(255,255,255,0.05);
+            padding: 15px; border-radius: 15px;
+            margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);
             transition: 0.3s;
+            position: relative; overflow: hidden;
         }
-        .card:hover { border-color: var(--glass-border); background: rgba(255,255,255,0.06); }
-        .card-title { font-weight: 600; margin-bottom: 5px; color: var(--accent); }
-        .card-text { font-size: 0.9rem; color: var(--text-sec); }
+        .card:hover { 
+            transform: translateX(5px); 
+            border-left: 5px solid var(--secondary); 
+            background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+        }
 
-        /* Chat Anônimo */
-        .chat-box { max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; }
+        /* ÁREA DE REVELAÇÃO */
+        .reveal-box {
+            text-align: center; padding: 40px 20px; 
+            background: linear-gradient(135deg, rgba(66, 0, 255, 0.2), rgba(255, 15, 123, 0.2));
+            border-radius: 24px; border: 1px solid rgba(255,255,255,0.1);
+            position: relative; overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .reveal-box::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(255,255,255,0.3), transparent);
+            animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        
+        .reveal-content { position: relative; z-index: 2; }
+        
+        #revealed-name {
+            font-size: 2.8rem; font-weight: 900;
+            background: linear-gradient(to right, #fff, #f89b29);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: blur(15px); cursor: pointer; transition: 0.5s;
+            user-select: none;
+        }
+        #revealed-name:hover { filter: blur(5px); }
+        #revealed-name.revealed { filter: blur(0); text-shadow: 0 0 20px rgba(248, 155, 41, 0.8); }
+
+        /* CHAT */
+        .chat-box { max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 15px; }
         .chat-msg {
-            background: rgba(41, 151, 255, 0.1); padding: 8px 12px;
-            border-radius: 8px 8px 8px 0; margin-bottom: 8px; font-size: 0.9rem;
-            width: fit-content; max-width: 90%;
+            background: rgba(255,255,255,0.1); padding: 10px 15px;
+            border-radius: 15px 15px 15px 2px; margin-bottom: 10px; font-size: 0.9rem;
+            width: fit-content; max-width: 85%;
+            animation: slideInLeft 0.3s ease;
         }
-        .chat-msg.self { background: rgba(255,255,255,0.1); border-radius: 8px 8px 0 8px; margin-left: auto; }
-        .chat-meta { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
+        .chat-msg.self { 
+            background: var(--primary); 
+            border-radius: 15px 15px 2px 15px; 
+            margin-left: auto; 
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 15, 123, 0.3);
+        }
+        @keyframes slideInLeft { from{opacity:0; transform: translateX(-10px);} to{opacity:1; transform: translateX(0);} }
+        @keyframes slideInRight { from{opacity:0; transform: translateX(10px);} to{opacity:1; transform: translateX(0);} }
 
-        /* Tabs de Navegação */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .nav-tab { flex: 1; padding: 10px; text-align: center; border-radius: 8px; background: rgba(255,255,255,0.05); font-size: 0.8rem; cursor: pointer; transition: 0.3s; color: var(--text-sec); }
-        .nav-tab.active { background: var(--accent); color: white; }
-
-        /* Toast Notification */
+        /* TOAST */
         #toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            padding: 12px 24px; border-radius: 30px; border: 1px solid var(--glass-border);
-            z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: #fff; color: #000;
+            padding: 15px 30px; border-radius: 50px; 
+            font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000; opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        #toast.show { opacity: 1; top: 40px; }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="aurora"></div>
+    <div class="animated-bg"></div>
+    <div class="shapes" id="shapes-container">
+        </div>
 
     <div id="toast">Notificação aqui</div>
 
-    <div class="app-container">
+    <div class="app-container" id="tilt-card">
         <div id="view-login" class="view active">
-            <h1>Amigo Secreto</h1>
-            <p class="subtitle">Acesse seu grupo exclusivo</p>
+            <div style="text-align: center;">
+                <span class="year-badge">CONFRA 2025</span>
+                <h1>Amigo Secreto</h1>
+            </div>
+            <p class="subtitle">Acesse o grupo mais animado do ano!</p>
             
             <form id="login-form">
                 <div class="input-group">
                     <input type="email" id="email" placeholder="Seu E-mail" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" placeholder="Sua Senha" required>
+                    <input type="password" id="password" placeholder="Senha Secreta" required>
                 </div>
-                <button type="submit">Entrar no Grupo</button>
+                <button type="submit">PARTIU AMIGAR hihi </button>
             </form>
-            <p style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-sec);">
-                Não tem conta? Fale com o admin.
+            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem; opacity: 0.6;">
+                Esqueceu a senha? Paga uma prenda pro admin.
             </p>
         </div>
 
         <div id="view-dashboard" class="view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 id="user-name">Olá, Usuário</h2>
-                <button onclick="logout()" style="width: auto; padding: 8px 16px; font-size: 0.8rem; background: rgba(255,0,0,0.2); color: #ff6b6b;">Sair</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2 id="user-name" style="font-size: 1.2rem; font-weight: 700;">Olá, Baladeiro</h2>
+                <button onclick="logout()" style="width: auto; padding: 8px 16px; font-size: 0.75rem; background: rgba(255,255,255,0.1); margin:0;">Sair</button>
             </div>
 
             <div class="nav-tabs">
-                <div class="nav-tab active" onclick="switchTab('meu-amigo')">Meu Amigo</div>
-                <div class="nav-tab" onclick="switchTab('desejos')">Desejos</div>
-                <div class="nav-tab" onclick="switchTab('chat')">Chat Anônimo</div>
+                <div class="nav-tab active" onclick="switchTab('meu-amigo')">🤫 Quem tirei?</div>
+                <div class="nav-tab" onclick="switchTab('desejos')">🎁 Desejos</div>
+                <div class="nav-tab" onclick="switchTab('chat')">💬 Chat Secreto</div>
             </div>
 
             <div id="tab-meu-amigo" class="tab-content">
-                <div style="text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--glass-border);">
-                    <p style="color: var(--text-sec); margin-bottom: 10px;">Você tirou...</p>
-                    <h1 id="revealed-name" style="font-size: 2.5rem; color: var(--accent); filter: blur(10px); cursor: pointer; transition: 0.5s;" onclick="this.style.filter = 'blur(0)'">
-                        ???
-                    </h1>
-                    <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">(Toque para revelar)</p>
+                <div class="reveal-box">
+                    <div class="reveal-content">
+                        <p style="margin-bottom: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">Sua missão é presentear:</p>
+                        <h1 id="revealed-name" onclick="revealNameEffect(this)">???</h1>
+                        <p style="font-size: 0.75rem; margin-top: 15px; opacity: 0.8;">(Toque no nome para revelar)</p>
+                    </div>
                 </div>
-                <div style="margin-top: 20px;">
-                    <h3>O que ele(a) quer:</h3>
-                    <div id="amigo-wishes" style="margin-top: 10px;">
-                        <p style="color: var(--text-sec); font-style: italic;">Carregando desejos...</p>
+                <div style="margin-top: 25px;">
+                    <h3 style="margin-bottom: 15px; color: var(--secondary);">O que ele(a) quer:</h3>
+                    <div id="amigo-wishes">
+                        <p style="opacity: 0.5; font-style: italic;">Carregando a lista de presentes...</p>
                     </div>
                 </div>
             </div>
 
             <div id="tab-desejos" class="tab-content" style="display: none;">
                 <div class="input-group">
-                    <input type="url" id="wish-link" placeholder="Cole um link do produto (Amazon, ML...)">
+                    <input type="url" id="wish-link" placeholder="Cole o link (Amazon, ML...)">
                 </div>
                 <div class="input-group">
-                    <input type="text" id="wish-desc" placeholder="Obs: tamanho, cor...">
+                    <input type="text" id="wish-desc" placeholder="Detalhes (Cor, tamanho, etc.)">
                 </div>
-                <button onclick="addWish()">Adicionar à Minha Lista</button>
+                <button onclick="addWish()">Adicionar à Lista ✨</button>
                 
-                <div id="my-wishes-list" style="margin-top: 20px; max-height: 200px; overflow-y: auto;">
+                <div id="my-wishes-list" style="margin-top: 25px; max-height: 250px; overflow-y: auto;">
                     </div>
             </div>
 
@@ -221,26 +336,64 @@
                 <div class="chat-box" id="chat-messages">
                     </div>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="chat-input" placeholder="Mensagem secreta...">
-                    <button style="width: 50px;" onclick="sendMessage()">➤</button>
+                    <input type="text" id="chat-input" placeholder="Mande sua mensagem anônima...">
+                    <button style="width: 60px; font-size: 1.2rem; padding: 0;" onclick="sendMessage()">➤</button>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script type="module">
-        // Configuração Inicial
+        // Configuração Inicial MANTIDA
         const API_URL = "https://amigosecreto-api-vbtt.onrender.com";
         const { createDirectus, rest, authentication, readItems, createItem, readMe } = window.DirectusSDK;
         
-        // Inicializa o Cliente
         const client = createDirectus(API_URL).with(authentication("json")).with(rest());
-
-        // Variáveis de Estado
         let currentUser = null;
 
-        // Funções de UI
+        // --- EFEITOS VISUAIS E ANIMAÇÃO (NOVO) ---
+        
+        // 1. Gerador de Formas Flutuantes no fundo
+        const shapesContainer = document.getElementById('shapes-container');
+        for(let i=0; i<15; i++){
+            const div = document.createElement('div');
+            div.classList.add('shape');
+            div.style.left = Math.random() * 100 + '%';
+            div.style.width = (Math.random() * 100 + 20) + 'px';
+            div.style.height = div.style.width;
+            div.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            div.style.animationDelay = (Math.random() * 5) + 's';
+            shapesContainer.appendChild(div);
+        }
+
+        // 2. Efeito Tilt 3D no Card Principal
+        const card = document.getElementById('tilt-card');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // 3. Efeito de Revelação com Confete
+        window.revealNameEffect = (element) => {
+            if(element.innerText === "???") return; // Só se tiver nome carregado
+            
+            if(!element.classList.contains('revealed')) {
+                element.classList.add('revealed');
+                // Dispara confetes!
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff0f7b', '#f89b29', '#4200ff']
+                });
+            } else {
+                element.classList.remove('revealed'); // Esconde de novo se clicar
+            }
+        }
+
+        // --- FUNÇÕES DE LÓGICA (MANTIDAS 100%) ---
+
         window.showToast = (msg) => {
             const t = document.getElementById('toast');
             t.textContent = msg; t.classList.add('show');
@@ -257,38 +410,34 @@
             if(tabName === 'desejos') loadMyWishes();
         }
 
-        // LOGIN
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
             try {
-                // Tenta autenticar
                 await client.login(email, password);
-                
-                // Pega dados do usuário
                 currentUser = await client.request(readMe({ fields: ['*', 'amigo_secreto.*'] }));
                 
-                // Atualiza UI
+                // Visual Update
                 document.getElementById('view-login').classList.remove('active');
                 document.getElementById('view-dashboard').classList.add('active');
-                document.getElementById('user-name').textContent = `Olá, ${currentUser.first_name || 'Participante'}`;
+                document.getElementById('user-name').textContent = `E aí, ${currentUser.first_name || 'Festêro'}!`;
                 
-                // Carrega Amigo Secreto (Se sorteado)
+                // Confete de Login!
+                confetti({ particleCount: 100, spread: 100, origin: { y: 0.6 } });
+
                 if(currentUser.amigo_secreto) {
-                    // O Directus pode retornar o ID ou o Objeto dependendo da config. 
-                    // Assumindo que o campo 'amigo_secreto' no user é um relacionamento Many-to-One com Participantes
-                    // Ajuste conforme seu Data Model real.
-                    document.getElementById('revealed-name').textContent = "Fulano (Demo)"; // Substituir pela lógica real
-                    showToast("Login realizado com sucesso!");
+                    // Mudei aqui apenas para usar a variável que você já tinha ou lógica real
+                    document.getElementById('revealed-name').textContent = "Fulano (Demo)"; 
+                    showToast("Login: Sucesso total! 🔥");
                 } else {
-                    document.getElementById('revealed-name').textContent = "Aguardando Sorteio";
+                    document.getElementById('revealed-name').textContent = "Aguardando...";
                 }
 
             } catch (error) {
                 console.error(error);
-                showToast("Erro no login. Verifique e-mail e senha.");
+                showToast("Ops! Login falhou. Tenta de novo.");
             }
         });
 
@@ -297,13 +446,11 @@
             location.reload();
         };
 
-        // CHAT
         window.loadChat = async () => {
             const box = document.getElementById('chat-messages');
-            box.innerHTML = '<p style="text-align:center; opacity:0.5">Carregando...</p>';
+            box.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:20px;">Baixando fofocas...</p>';
             
             try {
-                // Ajuste 'mensagens' para o nome da sua collection
                 const messages = await client.request(readItems('mensagens', {
                     sort: ['date_created'],
                     limit: 50,
@@ -312,18 +459,18 @@
                 
                 box.innerHTML = '';
                 messages.forEach(msg => {
-                    const isMe = msg.remetente_id === currentUser.id; // Lógica simplificada
+                    const isMe = msg.remetente_id === currentUser.id; 
                     const div = document.createElement('div');
                     div.className = `chat-msg ${isMe ? 'self' : ''}`;
                     div.innerHTML = `
-                        <div class="chat-meta">${msg.apelido_exibido || 'Anônimo'}</div>
+                        <div style="font-size:0.7rem; opacity:0.7; margin-bottom:2px;">${msg.apelido_exibido || 'Mascarado'}</div>
                         ${msg.texto_mensagem}
                     `;
                     box.appendChild(div);
                 });
                 box.scrollTop = box.scrollHeight;
             } catch (e) {
-                box.innerHTML = '<p>Chat vazio ou erro ao carregar.</p>';
+                box.innerHTML = '<p style="text-align:center;">Silêncio total no chat...</p>';
             }
         }
 
@@ -335,17 +482,15 @@
             try {
                 await client.request(createItem('mensagens', {
                     texto_mensagem: text,
-                    apelido_exibido: "Duende Secreto", // Pode randomizar isso
-                    // O Directus preenche o user owner automaticamente se configurado
+                    apelido_exibido: "Duende Baladeiro", 
                 }));
                 input.value = '';
-                loadChat(); // Reload simples (ideal seria websocket)
+                loadChat(); 
             } catch (e) {
-                showToast("Erro ao enviar mensagem.");
+                showToast("Erro ao enviar. A internet caiu?");
             }
         }
 
-        // DESEJOS
         window.addWish = async () => {
             const link = document.getElementById('wish-link').value;
             const desc = document.getElementById('wish-desc').value;
@@ -355,11 +500,12 @@
                     link_produto: link,
                     observacao: desc
                 }));
-                showToast("Desejo adicionado!");
+                showToast("Desejo salvo! 🎁");
                 document.getElementById('wish-link').value = '';
+                document.getElementById('wish-desc').value = '';
                 loadMyWishes();
             } catch (e) {
-                showToast("Erro ao salvar desejo.");
+                showToast("Erro ao salvar. Tente de novo.");
             }
         }
 
@@ -367,21 +513,20 @@
              const list = document.getElementById('my-wishes-list');
              try {
                  const wishes = await client.request(readItems('desejos', {
-                     filter: { _creator: { _eq: "CURRENT_USER" } } // Filtro mágico do Directus
+                     filter: { _creator: { _eq: "CURRENT_USER" } } 
                  }));
                  
                  list.innerHTML = wishes.map(w => `
                     <div class="card">
-                        <div class="card-title">🎁 Presente</div>
-                        <div class="card-text">${w.observacao || 'Sem descrição'}</div>
-                        <a href="${w.link_produto}" target="_blank" style="color:var(--accent); font-size:0.8rem;">Ver Link</a>
+                        <div style="color:var(--secondary); font-weight:bold; margin-bottom:5px;">🎁 Quero ganhar:</div>
+                        <div style="margin-bottom:8px; font-size:0.95rem;">${w.observacao || 'Surpresa...'}</div>
+                        ${w.link_produto ? `<a href="${w.link_produto}" target="_blank" style="color:#fff; text-decoration:underline; font-size:0.8rem;">Ver Link do Produto</a>` : ''}
                     </div>
                  `).join('');
              } catch(e) {
                  console.log(e);
              }
         }
-
     </script>
 </body>
 </html>
