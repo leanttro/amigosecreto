@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Secreto | Premium Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe } from 'https://www.unpkg.com/@directus/sdk@13.0.0/dist/index.js';
+        window.DirectusSDK = { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe };
+    </script>
+
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: 20px;
+            --accent: #2997ff; /* Apple Blue */
+            --accent-glow: rgba(41, 151, 255, 0.4);
+            --text-main: #f5f5f7;
+            --text-sec: #86868b;
+            --bg-dark: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #000 60%);
+        }
+
+        /* Fundo Animado (Aurora) */
+        .aurora {
+            position: fixed;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(41,151,255,0.15), transparent 40%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Container Principal (Glassmorphism) */
+        .app-container {
+            width: 90%; max-width: 450px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0; transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-weight: 800; font-size: 2rem; margin-bottom: 8px; letter-spacing: -1px; text-align: center; }
+        p.subtitle { color: var(--text-sec); text-align: center; margin-bottom: 30px; font-weight: 300; }
+
+        /* Inputs Estilo Tesla */
+        .input-group { margin-bottom: 20px; position: relative; }
+        input, textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+        ::placeholder { color: rgba(255,255,255,0.3); }
+
+        /* Botão Premium */
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-main);
+            color: black;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        button.secondary {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-sec); margin-top: 10px;
+        }
+        button.secondary:hover { border-color: var(--text-main); color: var(--text-main); }
+
+        /* Views (Telas) */
+        .view { display: none; }
+        .view.active { display: block; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Cards de Presentes / Chat */
+        .card {
+            background: rgba(255,255,255,0.03);
+            padding: 15px; border-radius: 12px;
+            margin-bottom: 10px; border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--glass-border); background: rgba(255,255,255,0.06); }
+        .card-title { font-weight: 600; margin-bottom: 5px; color: var(--accent); }
+        .card-text { font-size: 0.9rem; color: var(--text-sec); }
+
+        /* Chat Anônimo */
+        .chat-box { max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px; }
+        .chat-msg {
+            background: rgba(41, 151, 255, 0.1); padding: 8px 12px;
+            border-radius: 8px 8px 8px 0; margin-bottom: 8px; font-size: 0.9rem;
+            width: fit-content; max-width: 90%;
+        }
+        .chat-msg.self { background: rgba(255,255,255,0.1); border-radius: 8px 8px 0 8px; margin-left: auto; }
+        .chat-meta { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
+
+        /* Tabs de Navegação */
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-tab { flex: 1; padding: 10px; text-align: center; border-radius: 8px; background: rgba(255,255,255,0.05); font-size: 0.8rem; cursor: pointer; transition: 0.3s; color: var(--text-sec); }
+        .nav-tab.active { background: var(--accent); color: white; }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            padding: 12px 24px; border-radius: 30px; border: 1px solid var(--glass-border);
+            z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
+        }
+        #toast.show { opacity: 1; top: 40px; }
+    </style>
+</head>
+<body>
+
+    <div class="aurora"></div>
+
+    <div id="toast">Notificação aqui</div>
+
+    <div class="app-container">
+        <div id="view-login" class="view active">
+            <h1>Amigo Secreto</h1>
+            <p class="subtitle">Acesse seu grupo exclusivo</p>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Seu E-mail" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Sua Senha" required>
+                </div>
+                <button type="submit">Entrar no Grupo</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-sec);">
+                Não tem conta? Fale com o admin.
+            </p>
+        </div>
+
+        <div id="view-dashboard" class="view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="user-name">Olá, Usuário</h2>
+                <button onclick="logout()" style="width: auto; padding: 8px 16px; font-size: 0.8rem; background: rgba(255,0,0,0.2); color: #ff6b6b;">Sair</button>
+            </div>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="switchTab('meu-amigo')">Meu Amigo</div>
+                <div class="nav-tab" onclick="switchTab('desejos')">Desejos</div>
+                <div class="nav-tab" onclick="switchTab('chat')">Chat Anônimo</div>
+            </div>
+
+            <div id="tab-meu-amigo" class="tab-content">
+                <div style="text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid var(--glass-border);">
+                    <p style="color: var(--text-sec); margin-bottom: 10px;">Você tirou...</p>
+                    <h1 id="revealed-name" style="font-size: 2.5rem; color: var(--accent); filter: blur(10px); cursor: pointer; transition: 0.5s;" onclick="this.style.filter = 'blur(0)'">
+                        ???
+                    </h1>
+                    <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">(Toque para revelar)</p>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3>O que ele(a) quer:</h3>
+                    <div id="amigo-wishes" style="margin-top: 10px;">
+                        <p style="color: var(--text-sec); font-style: italic;">Carregando desejos...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-desejos" class="tab-content" style="display: none;">
+                <div class="input-group">
+                    <input type="url" id="wish-link" placeholder="Cole um link do produto (Amazon, ML...)">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="wish-desc" placeholder="Obs: tamanho, cor...">
+                </div>
+                <button onclick="addWish()">Adicionar à Minha Lista</button>
+                
+                <div id="my-wishes-list" style="margin-top: 20px; max-height: 200px; overflow-y: auto;">
+                    </div>
+            </div>
+
+            <div id="tab-chat" class="tab-content" style="display: none;">
+                <div class="chat-box" id="chat-messages">
+                    </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chat-input" placeholder="Mensagem secreta...">
+                    <button style="width: 50px;" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        // Configuração Inicial
+        const API_URL = "https://amigosecreto-api-vbtt.onrender.com";
+        const { createDirectus, rest, authentication, readItems, createItem, readMe } = window.DirectusSDK;
+        
+        // Inicializa o Cliente
+        const client = createDirectus(API_URL).with(authentication("json")).with(rest());
+
+        // Variáveis de Estado
+        let currentUser = null;
+
+        // Funções de UI
+        window.showToast = (msg) => {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        window.switchTab = (tabName) => {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.getElementById(`tab-${tabName}`).style.display = 'block';
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if(tabName === 'chat') loadChat();
+            if(tabName === 'desejos') loadMyWishes();
+        }
+
+        // LOGIN
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                // Tenta autenticar
+                await client.login(email, password);
+                
+                // Pega dados do usuário
+                currentUser = await client.request(readMe({ fields: ['*', 'amigo_secreto.*'] }));
+                
+                // Atualiza UI
+                document.getElementById('view-login').classList.remove('active');
+                document.getElementById('view-dashboard').classList.add('active');
+                document.getElementById('user-name').textContent = `Olá, ${currentUser.first_name || 'Participante'}`;
+                
+                // Carrega Amigo Secreto (Se sorteado)
+                if(currentUser.amigo_secreto) {
+                    // O Directus pode retornar o ID ou o Objeto dependendo da config. 
+                    // Assumindo que o campo 'amigo_secreto' no user é um relacionamento Many-to-One com Participantes
+                    // Ajuste conforme seu Data Model real.
+                    document.getElementById('revealed-name').textContent = "Fulano (Demo)"; // Substituir pela lógica real
+                    showToast("Login realizado com sucesso!");
+                } else {
+                    document.getElementById('revealed-name').textContent = "Aguardando Sorteio";
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast("Erro no login. Verifique e-mail e senha.");
+            }
+        });
+
+        window.logout = async () => {
+            await client.logout();
+            location.reload();
+        };
+
+        // CHAT
+        window.loadChat = async () => {
+            const box = document.getElementById('chat-messages');
+            box.innerHTML = '<p style="text-align:center; opacity:0.5">Carregando...</p>';
+            
+            try {
+                // Ajuste 'mensagens' para o nome da sua collection
+                const messages = await client.request(readItems('mensagens', {
+                    sort: ['date_created'],
+                    limit: 50,
+                    fields: ['texto_mensagem', 'apelido_exibido', 'date_created', 'remetente_id']
+                }));
+                
+                box.innerHTML = '';
+                messages.forEach(msg => {
+                    const isMe = msg.remetente_id === currentUser.id; // Lógica simplificada
+                    const div = document.createElement('div');
+                    div.className = `chat-msg ${isMe ? 'self' : ''}`;
+                    div.innerHTML = `
+                        <div class="chat-meta">${msg.apelido_exibido || 'Anônimo'}</div>
+                        ${msg.texto_mensagem}
+                    `;
+                    box.appendChild(div);
+                });
+                box.scrollTop = box.scrollHeight;
+            } catch (e) {
+                box.innerHTML = '<p>Chat vazio ou erro ao carregar.</p>';
+            }
+        }
+
+        window.sendMessage = async () => {
+            const input = document.getElementById('chat-input');
+            const text = input.value;
+            if(!text) return;
+
+            try {
+                await client.request(createItem('mensagens', {
+                    texto_mensagem: text,
+                    apelido_exibido: "Duende Secreto", // Pode randomizar isso
+                    // O Directus preenche o user owner automaticamente se configurado
+                }));
+                input.value = '';
+                loadChat(); // Reload simples (ideal seria websocket)
+            } catch (e) {
+                showToast("Erro ao enviar mensagem.");
+            }
+        }
+
+        // DESEJOS
+        window.addWish = async () => {
+            const link = document.getElementById('wish-link').value;
+            const desc = document.getElementById('wish-desc').value;
+            
+            try {
+                await client.request(createItem('desejos', {
+                    link_produto: link,
+                    observacao: desc
+                }));
+                showToast("Desejo adicionado!");
+                document.getElementById('wish-link').value = '';
+                loadMyWishes();
+            } catch (e) {
+                showToast("Erro ao salvar desejo.");
+            }
+        }
+
+        window.loadMyWishes = async () => {
+             const list = document.getElementById('my-wishes-list');
+             try {
+                 const wishes = await client.request(readItems('desejos', {
+                     filter: { _creator: { _eq: "CURRENT_USER" } } // Filtro mágico do Directus
+                 }));
+                 
+                 list.innerHTML = wishes.map(w => `
+                    <div class="card">
+                        <div class="card-title">🎁 Presente</div>
+                        <div class="card-text">${w.observacao || 'Sem descrição'}</div>
+                        <a href="${w.link_produto}" target="_blank" style="color:var(--accent); font-size:0.8rem;">Ver Link</a>
+                    </div>
+                 `).join('');
+             } catch(e) {
+                 console.log(e);
+             }
+        }
+
+    </script>
+</body>
+</html>
