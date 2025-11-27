@@ -9,8 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script type="module">
-        import { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe } from 'https://www.unpkg.com/@directus/sdk@13.0.0/dist/index.js';
-        window.DirectusSDK = { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe };
+        import { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe, updateMe } from 'https://www.unpkg.com/@directus/sdk@13.0.0/dist/index.js';
+        window.DirectusSDK = { createDirectus, rest, authentication, staticToken, readItems, createItem, readMe, updateMe };
     </script>
 
     <style>
@@ -66,6 +66,7 @@
             box-shadow: 0 50px 70px -20px rgba(0,0,0,0.6);
             transform-style: preserve-3d;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            max-height: 90vh; overflow-y: auto; /* Scroll se a tela for pequena */
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(50px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
@@ -133,6 +134,11 @@
             z-index: 1000; opacity: 0; transition: 0.4s;
         }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* SCROLLBAR CUSTOM */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -192,13 +198,22 @@
                     <button style="width: 60px; font-size: 1.2rem; padding: 0;" onclick="sendMessage()">➤</button>
                 </div>
             </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0 20px 0;">
+            <details style="cursor: pointer; opacity: 0.8; font-size: 0.8rem;">
+                <summary style="font-weight: 700;">⚙️ Alterar minha senha</summary>
+                <div style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
+                    <div class="input-group"><input type="password" id="new-password" placeholder="Nova senha segura"></div>
+                    <button onclick="changePassword()" style="padding: 12px; font-size: 0.8rem; background: var(--tertiary);">Salvar Nova Senha</button>
+                </div>
+            </details>
         </div>
     </div>
 
     <script type="module">
         // --- CONFIGURAÇÃO ---
         const API_URL = "https://amigosecreto-api-vbtt.onrender.com";
-        const { createDirectus, rest, authentication, readItems, createItem, readMe } = window.DirectusSDK;
+        const { createDirectus, rest, authentication, readItems, createItem, readMe, updateMe } = window.DirectusSDK;
         const client = createDirectus(API_URL).with(authentication("json")).with(rest());
         let currentUser = null;
 
@@ -242,7 +257,7 @@
             try {
                 await client.login(email, password);
                 
-                // IMPORTANTE: Busca o campo novo 'amigo_secreto_revelado'
+                // IMPORTANTE: Busca o campo 'amigo_secreto_revelado'
                 currentUser = await client.request(readMe({ 
                     fields: ['*', 'amigo_secreto_revelado'] 
                 }));
@@ -260,8 +275,8 @@
                 if (currentUser.amigo_secreto_revelado) {
                     // Sorteio Feito: Coloca o nome e aplica o efeito de Blur
                     nameElement.textContent = currentUser.amigo_secreto_revelado;
-                    nameElement.classList.remove('locked'); // Remove trava
-                    nameElement.classList.remove('revealed'); // Garante que comece borrado
+                    nameElement.classList.remove('locked'); 
+                    nameElement.classList.remove('revealed'); 
                     hintElement.style.display = 'block';
                 } else {
                     // Sorteio Pendente: Avisa e bloqueia
@@ -280,12 +295,10 @@
 
         // REVELAR NOME (SÓ FUNCIONA SE TIVER SORTEIO)
         window.revealNameEffect = (element) => {
-            // Se estiver bloqueado (Locked) ou já revelado, não faz nada
             if(element.classList.contains('locked')) {
                 showToast("Calma! O Admin ainda não sorteou.");
                 return;
             }
-            
             if(!element.classList.contains('revealed')) {
                 element.classList.add('revealed');
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff0f7b', '#f89b29', '#4200ff'] });
@@ -296,7 +309,25 @@
 
         window.logout = async () => { await client.logout(); location.reload(); };
 
-        // --- CHAT E DESEJOS (IGUAIS ANTES) ---
+        // --- FUNÇÃO DE TROCAR SENHA (NOVA) ---
+        window.changePassword = async () => {
+            const newPass = document.getElementById('new-password').value;
+            if (!newPass) return showToast("Digite uma senha nova!");
+
+            try {
+                // Atualiza o próprio usuário
+                await client.request(updateMe({ password: newPass }));
+                showToast("Senha alterada! ✅");
+                document.getElementById('new-password').value = '';
+                // Opcional: Recarregar a página para forçar login novo
+                setTimeout(() => location.reload(), 1500);
+            } catch (e) {
+                console.error(e);
+                showToast("Erro ao trocar senha. Permissão negada?");
+            }
+        }
+
+        // --- CHAT E DESEJOS ---
         window.loadChat = async () => {
             const box = document.getElementById('chat-messages');
             try {
