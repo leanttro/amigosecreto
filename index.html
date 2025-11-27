@@ -36,13 +36,10 @@
             perspective: 1000px;
         }
 
-        /* FUNDO ANIMADO */
         .animated-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: linear-gradient(45deg, #4200ff, #ff0f7b, #f89b29, #00c6ff);
-            background-size: 400% 400%;
-            animation: gradientMove 15s ease infinite;
-            z-index: -2;
+            background-size: 400% 400%; animation: gradientMove 15s ease infinite; z-index: -2;
         }
         .shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }
         .shape {
@@ -53,24 +50,18 @@
         @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes floatShape { 0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; } }
 
-        /* CONTAINER 3D GLASS */
         .app-container {
             width: 90%; max-width: 420px;
             background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-top: 1px solid rgba(255,255,255,0.5);
-            border-radius: 30px;
-            padding: 40px 30px;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.5);
+            border-radius: 30px; padding: 40px 30px;
             box-shadow: 0 50px 70px -20px rgba(0,0,0,0.6);
-            transform-style: preserve-3d;
-            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            max-height: 90vh; overflow-y: auto; /* Scroll se a tela for pequena */
+            transform-style: preserve-3d; animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            max-height: 90vh; overflow-y: auto;
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(50px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* ELEMENTOS UI */
         h1 { 
             font-weight: 900; font-size: 2.2rem; margin-bottom: 5px; text-align: center; text-transform: uppercase;
             background: linear-gradient(to right, #fff, #ffcc00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -96,7 +87,6 @@
         }
         button:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 15px 30px rgba(255, 15, 123, 0.5); }
 
-        /* VIEWS & TABS */
         .view { display: none; }
         .view.active { display: block; animation: slideUp 0.5s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -105,7 +95,6 @@
         .nav-tab { flex: 1; padding: 12px 5px; text-align: center; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.3s; color: rgba(255,255,255,0.6); text-transform: uppercase; }
         .nav-tab.active { background: #fff; color: var(--bg-deep); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        /* REVELAÇÃO */
         .reveal-box {
             text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(66, 0, 255, 0.2), rgba(255, 15, 123, 0.2));
             border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
@@ -119,30 +108,26 @@
         #revealed-name.revealed { filter: blur(0); text-shadow: 0 0 20px rgba(248, 155, 41, 0.8); }
         #revealed-name.locked { filter: none; opacity: 0.5; font-size: 1.5rem; cursor: default; }
 
-        /* CHAT & CARDS */
         .chat-box { max-height: 300px; overflow-y: auto; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 15px; }
         .chat-msg { background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 15px 15px 15px 2px; margin-bottom: 10px; font-size: 0.9rem; width: fit-content; max-width: 85%; }
         .chat-msg.self { background: var(--primary); border-radius: 15px 15px 2px 15px; margin-left: auto; }
         
         .card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 12px; transition: 0.3s; border-left: 2px solid transparent; }
         .card:hover { transform: translateX(5px); border-left: 5px solid var(--secondary); background: rgba(255,255,255,0.1); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .card-user { font-weight: 700; color: var(--secondary); font-size: 0.9rem; text-transform: uppercase; }
+        .card-body { font-size: 0.95rem; margin-bottom: 8px; line-height: 1.4; }
 
-        /* TOAST */
         #toast {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: #fff; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 700;
             z-index: 1000; opacity: 0; transition: 0.4s;
         }
         #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* SCROLLBAR CUSTOM */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 5px; }
     </style>
 </head>
 <body>
-
     <div class="animated-bg"></div>
     <div class="shapes" id="shapes-container"></div>
     <div id="toast">Notificação aqui</div>
@@ -154,7 +139,6 @@
                 <h1>Amigo Secreto</h1>
             </div>
             <p class="subtitle">Acesse o grupo mais animado do ano!</p>
-            
             <form id="login-form">
                 <div class="input-group"><input type="email" id="email" placeholder="Seu E-mail" required></div>
                 <div class="input-group"><input type="password" id="password" placeholder="Senha Secreta" required></div>
@@ -164,14 +148,14 @@
 
         <div id="view-dashboard" class="view">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2 id="user-name" style="font-size: 1.2rem; font-weight: 700;">Olá, Baladeiro</h2>
+                <h2 id="user-name" style="font-size: 1.2rem; font-weight: 700;">Olá!</h2>
                 <button onclick="logout()" style="width: auto; padding: 8px 16px; font-size: 0.75rem; background: rgba(255,255,255,0.1); margin:0;">Sair</button>
             </div>
 
             <div class="nav-tabs">
                 <div class="nav-tab active" onclick="switchTab('meu-amigo')">🤫 Quem tirei?</div>
-                <div class="nav-tab" onclick="switchTab('desejos')">🎁 Desejos</div>
-                <div class="nav-tab" onclick="switchTab('chat')">💬 Chat Secreto</div>
+                <div class="nav-tab" onclick="switchTab('desejos')">🎁 Lista Geral</div>
+                <div class="nav-tab" onclick="switchTab('chat')">💬 Chat</div>
             </div>
 
             <div id="tab-meu-amigo" class="tab-content">
@@ -185,10 +169,17 @@
             </div>
 
             <div id="tab-desejos" class="tab-content" style="display: none;">
-                <div class="input-group"><input type="url" id="wish-link" placeholder="Link (opcional)"></div>
-                <div class="input-group"><input type="text" id="wish-desc" placeholder="O que você quer? (Cor, tamanho...)"></div>
-                <button onclick="addWish()">Adicionar à Lista ✨</button>
-                <div id="my-wishes-list" style="margin-top: 25px; max-height: 250px; overflow-y: auto;"></div>
+                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+                    <h3 style="font-size: 0.9rem; margin-bottom: 10px; color: var(--primary);">Adicionar meu presente:</h3>
+                    <div class="input-group"><input type="url" id="wish-link" placeholder="Link (opcional)"></div>
+                    <div class="input-group"><input type="text" id="wish-desc" placeholder="O que você quer? (Cor, tamanho...)"></div>
+                    <button onclick="addWish()" style="font-size: 0.8rem; padding: 12px;">Publicar Desejo ✨</button>
+                </div>
+                
+                <h3 style="font-size: 1rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;">Lista de Desejos da Galera:</h3>
+                <div id="all-wishes-list" style="max-height: 300px; overflow-y: auto;">
+                    <p style="text-align: center; opacity: 0.5;">Carregando lista...</p>
+                </div>
             </div>
 
             <div id="tab-chat" class="tab-content" style="display: none;">
@@ -211,18 +202,16 @@
     </div>
 
     <script type="module">
-        // --- CONFIGURAÇÃO ---
         const API_URL = "https://amigosecreto-api-vbtt.onrender.com";
         const { createDirectus, rest, authentication, readItems, createItem, readMe, updateMe } = window.DirectusSDK;
         const client = createDirectus(API_URL).with(authentication("json")).with(rest());
         let currentUser = null;
 
-        // --- EFEITOS VISUAIS ---
+        // --- UI EFFECTS ---
         const shapesContainer = document.getElementById('shapes-container');
         for(let i=0; i<15; i++){
-            const div = document.createElement('div');
-            div.classList.add('shape');
-            div.style.left = Math.random()*100+'%'; div.style.width=(Math.random()*100+20)+'px'; div.style.height=div.style.width;
+            const div = document.createElement('div'); div.classList.add('shape');
+            div.style.left=Math.random()*100+'%'; div.style.width=(Math.random()*100+20)+'px'; div.style.height=div.style.width;
             div.style.animationDuration=(Math.random()*20+10)+'s'; div.style.animationDelay=(Math.random()*5)+'s';
             shapesContainer.appendChild(div);
         }
@@ -232,8 +221,7 @@
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // --- LÓGICA DE NEGÓCIO ---
-
+        // --- APP LOGIC ---
         window.showToast = (msg) => {
             const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
@@ -245,10 +233,9 @@
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
             event.target.classList.add('active');
             if(tabName === 'chat') loadChat();
-            if(tabName === 'desejos') loadMyWishes();
+            if(tabName === 'desejos') loadAllWishes();
         }
 
-        // --- LOGIN E CARREGAMENTO DE DADOS ---
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -256,89 +243,108 @@
             
             try {
                 await client.login(email, password);
+                currentUser = await client.request(readMe({ fields: ['*', 'amigo_secreto_revelado'] }));
                 
-                // IMPORTANTE: Busca o campo 'amigo_secreto_revelado'
-                currentUser = await client.request(readMe({ 
-                    fields: ['*', 'amigo_secreto_revelado'] 
-                }));
-                
-                // Muda a tela
                 document.getElementById('view-login').classList.remove('active');
                 document.getElementById('view-dashboard').classList.add('active');
                 document.getElementById('user-name').textContent = `E aí, ${currentUser.first_name || 'Festêro'}!`;
                 confetti({ particleCount: 100, spread: 100, origin: { y: 0.6 } });
 
-                // VERIFICA SE O SORTEIO JÁ ACONTECEU
                 const nameElement = document.getElementById('revealed-name');
                 const hintElement = document.getElementById('reveal-hint');
-
                 if (currentUser.amigo_secreto_revelado) {
-                    // Sorteio Feito: Coloca o nome e aplica o efeito de Blur
                     nameElement.textContent = currentUser.amigo_secreto_revelado;
-                    nameElement.classList.remove('locked'); 
-                    nameElement.classList.remove('revealed'); 
+                    nameElement.classList.remove('locked'); nameElement.classList.remove('revealed'); 
                     hintElement.style.display = 'block';
                 } else {
-                    // Sorteio Pendente: Avisa e bloqueia
                     nameElement.textContent = "Aguardando Sorteio...";
-                    nameElement.classList.add('locked');
-                    hintElement.style.display = 'none';
+                    nameElement.classList.add('locked'); hintElement.style.display = 'none';
                 }
-
                 showToast("Login realizado! 🔥");
-
-            } catch (error) {
-                console.error(error);
-                showToast("Ops! Login falhou. Verifique senha/email.");
-            }
+            } catch (error) { console.error(error); showToast("Ops! Login falhou."); }
         });
 
-        // REVELAR NOME (SÓ FUNCIONA SE TIVER SORTEIO)
         window.revealNameEffect = (element) => {
-            if(element.classList.contains('locked')) {
-                showToast("Calma! O Admin ainda não sorteou.");
-                return;
-            }
+            if(element.classList.contains('locked')) { showToast("O Admin ainda não sorteou."); return; }
             if(!element.classList.contains('revealed')) {
                 element.classList.add('revealed');
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff0f7b', '#f89b29', '#4200ff'] });
-            } else {
-                element.classList.remove('revealed');
-            }
+            } else { element.classList.remove('revealed'); }
         }
 
         window.logout = async () => { await client.logout(); location.reload(); };
 
-        // --- FUNÇÃO DE TROCAR SENHA (NOVA) ---
         window.changePassword = async () => {
             const newPass = document.getElementById('new-password').value;
             if (!newPass) return showToast("Digite uma senha nova!");
-
             try {
-                // Atualiza o próprio usuário
                 await client.request(updateMe({ password: newPass }));
-                showToast("Senha alterada! ✅");
-                document.getElementById('new-password').value = '';
-                // Opcional: Recarregar a página para forçar login novo
-                setTimeout(() => location.reload(), 1500);
-            } catch (e) {
-                console.error(e);
-                showToast("Erro ao trocar senha. Permissão negada?");
-            }
+                showToast("Senha alterada! ✅"); document.getElementById('new-password').value = '';
+            } catch (e) { console.error(e); showToast("Erro ao trocar senha."); }
         }
 
-        // --- CHAT E DESEJOS ---
+        // --- DESEJOS (CORRIGIDO PARA O NOME APARECER) ---
+        window.addWish = async () => {
+            const link = document.getElementById('wish-link').value; const desc = document.getElementById('wish-desc').value;
+            try {
+                await client.request(createItem('desejos', { link_produto: link, observacao: desc }));
+                showToast("Desejo salvo!"); 
+                document.getElementById('wish-link').value=''; document.getElementById('wish-desc').value=''; 
+                loadAllWishes();
+            } catch (e) { showToast("Erro ao salvar."); }
+        }
+
+        window.loadAllWishes = async () => {
+             const list = document.getElementById('all-wishes-list');
+             try {
+                 const wishes = await client.request(readItems('desejos', {
+                     fields: ['*', 'user_created.first_name'],
+                     sort: ['-id'] 
+                 }));
+                 
+                 if (wishes.length === 0) {
+                     list.innerHTML = '<p style="text-align: center; opacity: 0.5;">Ninguém pediu nada ainda...</p>';
+                     return;
+                 }
+
+                 list.innerHTML = wishes.map(w => {
+                     let dono = 'Alguém (Antigo)';
+                     // Tenta pegar o nome se existir
+                     if (w.user_created && w.user_created.first_name) {
+                        dono = w.user_created.first_name;
+                     }
+                     const isMe = w.user_created && w.user_created.id === currentUser.id;
+                     
+                     return `
+                    <div class="card" style="${isMe ? 'border-left: 5px solid var(--primary);' : ''}">
+                        <div class="card-header">
+                            <span class="card-user">${dono} quer:</span>
+                            ${w.link_produto ? `<a href="${w.link_produto}" target="_blank" style="color:#fff; text-decoration:underline; font-size:0.75rem;">Ver Link 🔗</a>` : ''}
+                        </div>
+                        <div class="card-body">${w.observacao || 'Sem descrição'}</div>
+                    </div>
+                 `}).join('');
+             } catch(e) { 
+                 console.log(e); 
+                 list.innerHTML = '<p style="text-align: center; color: #ff6b6b;">Erro ao carregar lista. Verifique permissões.</p>';
+             }
+        }
+
+        // --- CHAT (FORÇADO "AMIGO SECRETO") ---
         window.loadChat = async () => {
             const box = document.getElementById('chat-messages');
             try {
                 const messages = await client.request(readItems('mensagens', {
-                    sort: ['date_created'], limit: 50, fields: ['texto_mensagem', 'apelido_exibido', 'remetente_id']
+                    sort: ['id'], 
+                    limit: 50, 
+                    fields: ['texto_mensagem', 'remetente_id']
                 }));
                 box.innerHTML = '';
                 messages.forEach(msg => {
                     const isMe = msg.remetente_id === currentUser.id; 
                     const div = document.createElement('div'); div.className = `chat-msg ${isMe ? 'self' : ''}`;
-                    div.innerHTML = `<div style="font-size:0.7rem; opacity:0.7; margin-bottom:2px;">${msg.apelido_exibido || 'Anônimo'}</div>${msg.texto_mensagem}`;
+                    // AQUI EU FORÇO O NOME AMIGO SECRETO PRA MATAR O DUENDE
+                    div.innerHTML = `<div style="font-size:0.7rem; opacity:0.7; margin-bottom:2px; font-weight:bold;">Amigo Secreto 🕵️</div>${msg.texto_mensagem}`;
                     box.appendChild(div);
                 });
                 box.scrollTop = box.scrollHeight;
@@ -349,25 +355,10 @@
             const input = document.getElementById('chat-input');
             if(!input.value) return;
             try {
-                await client.request(createItem('mensagens', { texto_mensagem: input.value, apelido_exibido: "Duende Secreto" }));
+                // ENVIA COMO AMIGO SECRETO
+                await client.request(createItem('mensagens', { texto_mensagem: input.value, apelido_exibido: "Amigo Secreto" }));
                 input.value = ''; loadChat();
             } catch (e) { showToast("Erro ao enviar."); }
-        }
-
-        window.addWish = async () => {
-            const link = document.getElementById('wish-link').value; const desc = document.getElementById('wish-desc').value;
-            try {
-                await client.request(createItem('desejos', { link_produto: link, observacao: desc }));
-                showToast("Desejo salvo!"); document.getElementById('wish-link').value=''; document.getElementById('wish-desc').value=''; loadMyWishes();
-            } catch (e) { showToast("Erro ao salvar."); }
-        }
-
-        window.loadMyWishes = async () => {
-             const list = document.getElementById('my-wishes-list');
-             try {
-                 const wishes = await client.request(readItems('desejos', { filter: { _creator: { _eq: "CURRENT_USER" } } }));
-                 list.innerHTML = wishes.map(w => `<div class="card"><div style="color:var(--secondary); font-weight:bold;">🎁 Quero:</div><div>${w.observacao||'-'}</div>${w.link_produto?`<a href="${w.link_produto}" target="_blank" style="color:#fff; text-decoration:underline; font-size:0.8rem;">Ver Link</a>`:''}</div>`).join('');
-             } catch(e) { console.log(e); }
         }
     </script>
 </body>
